@@ -1,0 +1,39 @@
+zcat .//103.70.152.26 | grep -i stilwell62 > april.log
+ 
+zcat all.tar.gz | grep -a public ip
+
+103.168.164.86 nas siscon
+=CONCATENATE("'",A1,"'",",")     tar -xvf all.tar.gz (for extract file)
+
+pass rajar@h8@cld_111
+
+  As discussed on call, this IP is runing on Bypassmode so thats why we are not able to find session
+
+select * from VMS_CDR(nolock) where FRAMED_IP_ADDRESS like '%100.64.215.124%'
+
+103.233.117.139 Subhprabhat
+* * * * * cd /home/cflow-ipfix/bin && sh ./startIfNotRunning.sh (IPFIX KE LIYE)
+
+* * * * * cd /cflow/cflow-0.0.1-SNAPSHOT/bin && sh ./startIfNotRunning.sh 
+
+sudo ntpdate pool.ntp.org (command date) 
+
+select * from BUSINESS_PARTNER where COMPANYNAME like '%an%' (checking ptaner qury)
+
+find  /var/data/elk/logstash/data/csv/ipfix/2024/05  -type d -exec bash -c 'echo -n "$0 "; find "$0" -type f | wc -l' {} \;
+
+
+* * * * * cd /cflow/cflow-0.0.1-SNAPSHOT/bin && sh ./startIfNotRunning.sh (Auto ziping)
+* */1 * * * sh /root/log_file.sh
+
+size  command ( du -h --max-depth=1  
+copy command ( cp -r path dest 
+
+zcat .//103.70.152.26 nas  | grep -i username  > april.log (this command  is natting log find full month wise)
+ 
+email (Your point has been forwarded to the team we will keep you updated for the same)
+password-macrotik username h8api 
+
+zcat *.gz | grep -i 103.112.20.112  
+
+zcat ./*/* 103.70.152.26 | grep -i stilwell62 > april.log (ONE MONTH COMMAND )

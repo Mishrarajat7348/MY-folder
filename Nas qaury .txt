@@ -1,0 +1,13 @@
+Select  vc.USERID 'User Id',vc.NAME 'Customer Name',vc.PHONE, v.MAC_ID 'MACID',v.FRAMED_IP_ADDRESS 'Framed IP Address', v.NAS_IP_ADDRESS 'Nas IP Address',Convert(decimal(18,0),v.ACCT_SESSION_TIME/60)'Session Time(Min.)', Convert(decimal(18,0),(v.ACCT_INPUT_OCTETS+v.ACCT_OUTPUT_OCTETS)/1024/1024)'Total Volume(MB)', v.CALL_START 'Call Start date',v.CALL_END 'Call End Date' ,b.COMPANYNAME 'Comapny Name', r.NAME 'Reseller',vca.ADDRESS 'Address',vc.Landmark 'Area',vca.CITY 'City'
+
+From VMS_CDR_5_2024.dbo.VMS_CDR (nolock) v
+
+INNER JOIN VMS_CUSTOMER (nolock) vc on v.USER_ID=vc.ID
+
+left outer join VMS_CUST_ADDRESS (nolock) VCA on vca.CUST_ID = vc.ID and vca.ISPRESENT=1
+
+left outer join BUSINESS_PARTNER (nolock) B on b.ID = vc.PARTNER_ID
+ 
+left outer join VMS_RESELLER (nolock) r on r.ID = vc.CIRCLE
+
+where '2024-05-07    13:00:00'between v.CALL_START and v.CALL_END and v.NAS_IP_ADDRESS= '103.122.201.251'order by [call_start] desc

@@ -1,0 +1,30 @@
+SELECT 
+    vc.USERID_DISPLAY AS 'User Id',
+    vc.NAME AS 'Customer Name',
+    vc.PHONE,
+    v.MAC_ID AS 'MACID',
+    v.FRAMED_IP_ADDRESS AS 'Framed IP Address',
+    v.NAS_IP_ADDRESS AS 'Nas IP Address',
+    CONVERT(decimal(18,0), v.ACCT_SESSION_TIME/60) AS 'Session Time(Min.)',
+    CONVERT(decimal(18,0), (v.ACCT_INPUT_OCTETS + v.ACCT_OUTPUT_OCTETS)/1024/1024) AS 'Total Volume(MB)',
+    v.CALL_START AS 'Call Start date',
+    v.CALL_END AS 'Call End Date',
+    r.NAME AS 'Reseller',
+    l.NAME AS 'LCO',
+    vca.ADDRESS AS 'Address',
+    vc.Landmark AS 'Area',
+    vca.CITY AS 'City'
+FROM 
+    VMS_CDR_1_2024.dbo.VMS_CDR v
+INNER JOIN 
+    VMS_CUSTOMER vc ON v.USER_ID = vc.ID
+LEFT OUTER JOIN 
+    VMS_CUST_ADDRESS vca ON vca.CUST_ID = vc.ID AND vca.ISPRESENT = 1
+LEFT OUTER JOIN 
+    BUSINESS_PARTNER b ON b.ID = vc.PARTNER_ID
+LEFT OUTER JOIN 
+    VMS_RESELLER r ON r.ID = vc.CIRCLE
+LEFT OUTER JOIN 
+    VMS_LCO l ON l.ID = vc.LCO_ID
+WHERE 
+    vc.USERID_DISPLAY IN ('niraj@swift') -- Replace with actual user IDs
