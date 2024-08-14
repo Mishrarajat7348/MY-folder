@@ -1,0 +1,190 @@
+boot-500mb
+swap-16gb
+bios-boot/boot-efi=2gb
+/=all
+
+================CFLOW==============
+Installation Steps:
+====================================
+First Check after OS Installations
+====================================
+
+       A.To check the partition type
+            If it is standard, then no output for below command.
+            # lvdisplay
+
+       B.To check the storage size in the partition
+            It should be all in the root partition. (root partition denoted by '/')
+            # df -kh
+
+       C.set the time zone
+# Date (check the date and time for the system)
+
+            1)install the ntp server below command
+            # sudo apt install ntp for ubuntu 
+			# yum install ntp for centos
+
+            2)Not install the ntp server, so manual set the time through the below command.
+            # timedatectl set-timezone Asia/Kolkata
+             Or
+            # sudo ln -sf /usr/share/zoneinfo/Asia/Kolkata /etlocaltimec/
+              Or
+            # date -s "25 DEC 2023 14:32:00"
+
+===============================
+> Service Install :-
+================================
+
+> Copy cflow file via WINSCP to in the /home/ path
+                  ex:- /home/cflow/
+
+
+
+Step 1:-
+
+
+#Ubuntu:
+
+wget -O- https://apt.corretto.aws/corretto.key | sudo apt-key add - 
+sudo add-apt-repository 'deb https://apt.corretto.aws stable main'
+sudo apt-get update; sudo apt-get install -y java-17-amazon-corretto-jdk
+
+#Centos:
+
+#sudo rpm --import https://yum.corretto.aws/corretto.key
+#sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
+#sudo yum install -y java-17-amazon-corretto-devel
+
+Step 2 :-
+
+#cd /home/cflow/bin/config/
+# vi application-prod.yml
+
+Add Below details :-
+
+> location: /var/log/H8SysLog
+> port: 514
+> rolling-cron: "0 0 0/1  * * ?"
+
+
+Step 3 :-
+
+
+#cd /home/cflow/bin/
+#sh startServer.sh
+
+#jps   (For the verify service start or not)
+
+Step 4 :-
+
+
+#mkdir /var/log/H8SysLog
+#chmod -R 777 /var/log/H8SysLog
+
+#Centos: 
+#systemctl status firewalld
+#firewall-cmd --permanent --zone=public --add-port=514/udp
+#firewall-cmd --permanent --zone=public --add-port=514/tcp
+#firewall-cmd --reload
+
+#Ubuntu:
+sudo ufw allow 514/tcp
+sudo ufw allow 514/udp
+ufw status (if inactive then follow below mention step)
+ufw enable
+ufw reload
+
+
+======When System Reboot but service not start ============
+
+#cd /home/cflow/bin/
+
+vi startIfNotRunning.sh
+
+>Then paste below :
+
+[root@localhost bin]# cat startIfNotRunning.sh
+#!/bin/sh
+export JAVA_OPTS="-server -Xms8G -Xmx8G -XX:NewSize=6G -XX:MaxNewSize=6G -XX:+UseG1GC -Xloggc:gc.log"
+pid=$(jps | grep CflowApplication | awk '{print $1}')
+if [ -z "$pid" ]
+then
+      echo "No Server Instance found running"
+      echo "Staring cflow Service"
+      sh cflow --spring.profiles.active=prod >> /dev/null 2>&1 &
+fi
+
+:wq
+
+step 5:-
+#Ubuntu:
+if not installed cronie then follow below mentio step
+apt-get install cron
+
+Install Cronie
+#yum install cronie
+
+
+
+
+========crontab -e ==========
+
+# */1 * * * * cd /home/cflow/bin && sh ./startIfNotRunning.sh
+* */1 * * * sh /root/log_file.sh
+
+
+step 6:-
+====User Create======
+
+1) useradd ( User Name )
+#sudo useradd -ou 0 -g 0 height8
+
+2) passwd ( User Name )
+#sudo passwd height8
+#h8Log@2k19  2K21@h8Log I0g$k$3
+
+3) Allow this file with root
+sudo usermod -a -G root height8
+
+step 7:-
+========Security ========
+
+#cp /etc/ssh/sshd_config /etc/ssh/sshd_config.org
+
+#vi /etc/ssh/sshd_config
+#AllowUsers root@* height8@122.170.117.208 height8@202.47.116.5 height8@202.47.116.6 height8@110.227.212.213
+
+# yum -y install policycoreutils-python
+        # semanage port -a -t ssh_port_t -p tcp (New SSH Port)
+       
+        D) To allow new ssh port in firewall
+        # firewall-cmd --permanent --zone=public --add-port=4118/tcp
+       
+        E) Reload firewall to enable new changes in settings
+        # firewall-cmd --reload
+       
+        F) SSH Service Restart
+        # systemctl restart sshd.service
+       
+        G) To verify if the port is changed.
+        # ss -tnlp | grep ssh
+ 
+step 8 :-
+=======Auto Zipping========
+
+1) #vi log_file.sh
+  Press I ( Insert the script)
+ 
+#find /var/log/H8SysLog/ -type f -name '*.log'    -mmin +70  -print -exec gzip -v -r -1 {} \;
+
+sh log_file.sh
+
+
+3) #crontab -e
+* */1 * * * sh /root/log_file.sh
+
+service crond stop
+service crond start
+service crond status
+
+

@@ -1,0 +1,16 @@
+curl -u admin:admin --location 'http://103.81.26.23:8080/api/export' \
+--header 'Content-Type: application/json' \
+--data '{
+    "requestId": "103189124202040620241701.log",
+    "startTime": 1717500660,
+    "endTime": 1717500720,
+    "gatewayIP": "103.81.26.30",
+    "deviceIPs": ["103.189.124.202"],
+	"filePath": "/h8log/ipfix"
+}'
+
+
+timespamp : https://www.epochconverter.com/
+
+
+watch curl --user "admin:admin" --location --request POST 'http://103.81.26.23:8080/api/export/status?requestId=ipdrlog'   

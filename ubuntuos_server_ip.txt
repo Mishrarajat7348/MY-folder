@@ -1,0 +1,14 @@
+network:
+  version: 2
+  ethernets:
+    enp2s0:  # Replace with your interface name
+      dhcp4: no
+      addresses:
+        - 192.168.200.202/24  # Replace with your desired static IP address and subnet mask
+      gateway4: 192.168.200.1  # Replace with your gateway IP address
+      nameservers:
+        addresses:
+          - 8.8.8.8
+          - 8.8.4.4
+  
+

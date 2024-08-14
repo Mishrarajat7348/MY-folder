@@ -1,0 +1,46 @@
+server:
+  host: 0.0.0.0
+  port: 8080
+syslog:
+  port: 514
+  rolling-cron: "0 0/1 * * * ?"
+  date-format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+  export-mode: raw
+  export:
+    raw:
+      location: export/syslog/raw
+management:
+  endpoint:
+    shutdown:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: "env,beans"
+cflow:
+  log-collector:
+    url: 
+    token:
+  packet-drop-ratio: 0 # percentage
+  export-mode: csv
+  testing-mode: false
+  export-file-name-pattern: "yyyy-MM-dd-HH-mm"
+  date-format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+  gateway-whitelisting-enabled: false
+  gateway-reload-interval-cron: "0 0/1 * * * ?"
+  rolling-cron: "0 0/1 * * * ?"
+  gateways:
+    - ip: "*"
+      #export-fields: 152, 8, 27, 7, 225, 227, 12, 28, 11, 4
+      export-fields: 637:93, 7, 8, 225, 227, 12, 11, 4, 152, 153
+      file-prefix: ""
+      file-postfix: "Nokia"
+      file-extension: ".log"
+  port: 5140
+  export:
+    raw:
+      location: export/cflow/raw
+      backup-locations:
+    csv:
+      location: export/cflow/csv
